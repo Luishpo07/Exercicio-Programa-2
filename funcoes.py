@@ -59,3 +59,8 @@ def valida_questoes(questoes):
     for questao in questoes:
         resultado.append(valida_questao(questao))
     return resultado
+
+from random import choice
+
+def sorteia_questao(questoes, nivel):
+    return choice(questoes[nivel])
