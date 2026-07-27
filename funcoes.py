@@ -64,3 +64,10 @@ from random import choice
 
 def sorteia_questao(questoes, nivel):
     return choice(questoes[nivel])
+
+def sorteia_questao_inedita(questoes, nivel, questoes_sorteadas):
+    while True:
+        questao = sorteia_questao(questoes, nivel)
+        if questao not in questoes_sorteadas:
+            questoes_sorteadas.append(questao)
+            return questao
