@@ -5,7 +5,6 @@ from funcoes import (
     questao_para_texto,
     gera_ajuda
 )
-import random
 
 VERMELHO = "\033[91m"
 VERDE = "\033[92m"
@@ -37,12 +36,39 @@ def pede_opcao():
         print(VERMELHO + "Opção inválida. Digite A, B, C, D, pula ou ajuda." + RESET)
 
 
+def aguarda_enter(msg="Aperte ENTER para continuar..."):
+    input(AMARELO + msg + RESET)
+
+
 def mostra_manual():
     print(NEGRITO + ROXO + "\nManual do jogo:" + RESET)
     print(" - Digite A, B, C ou D para responder.")
     print(" - Digite ajuda para receber uma dica.")
     print(" - Digite pula para pular a questão.")
-    print(" - Você pode jogar novamente ao final de cada partida.\n")
+    print(" - As questões seguem a ordem: fácil, médio e difícil.")
+    print(" - Aperte ENTER quando o jogo pedir para continuar.\n")
+
+
+def nivel_da_questao(numero_questao):
+    if numero_questao <= 3:
+        return "facil"
+    elif numero_questao <= 6:
+        return "medio"
+    return "dificil"
+
+
+def mensagem_nivel(nivel):
+    if nivel == "facil":
+        return "HEY! Você começou no nível FACIL!"
+    elif nivel == "medio":
+        return "HEY! Você passou para o nível MEDIO!"
+    return "HEY! Você chegou ao nível DIFICIL!"
+
+
+def mostra_inicio_nivel(numero_questao):
+    nivel = nivel_da_questao(numero_questao)
+    print(NEGRITO + ROXO + "\n" + mensagem_nivel(nivel) + RESET)
+    aguarda_enter()
 
 
 def joga():
@@ -230,26 +256,36 @@ def joga():
     numero_questao = 1
 
     while True:
-        niveis_disponiveis = []
-
-        for nivel in base:
-            disponiveis = [q for q in base[nivel] if q not in questoes_sorteadas]
-            if len(disponiveis) > 0:
-                niveis_disponiveis.append(nivel)
-
-        if len(niveis_disponiveis) == 0:
-            print(AMARELO + "Não há mais questões disponíveis." + RESET)
+        if indice_premio == len(PONTOS):
+            print(NEGRITO + VERDE + f"\nParabéns, {nome}! Você ganhou o prêmio máximo!" + RESET)
             return
 
-        nivel = random.choice(niveis_disponiveis)
+        if numero_questao > len(PONTOS):
+            print(NEGRITO + CIANO + f"\nFim do jogo! Você saiu com R$ {premio_atual:.2f}." + RESET)
+            return
+
+        if numero_questao in [1, 4, 7]:
+            mostra_inicio_nivel(numero_questao)
+        else:
+            aguarda_enter()
+
+        nivel = nivel_da_questao(numero_questao)
+
+        disponiveis = [q for q in base[nivel] if q not in questoes_sorteadas]
+        if not disponiveis:
+            print(AMARELO + f"Não há mais questões inéditas no nível {nivel}." + RESET)
+            return
 
         questao = sorteia_questao_inedita(base, nivel, questoes_sorteadas)
+        if questao not in questoes_sorteadas:
+            questoes_sorteadas.append(questao)
+
         ajuda_usada_nesta_questao = False
 
         while True:
             print()
             print(ROXO + questao_para_texto(questao, numero_questao) + RESET)
-            print(NEGRITO + cor_por_premio(premio_atual) + f"\nPrêmio atual: R$ {premio_atual}" + RESET)
+            print(NEGRITO + cor_por_premio(premio_atual) + f"\nPrêmio atual: R$ {premio_atual:.2f}" + RESET)
             print(CIANO + f"Pulos restantes: {pulos_restantes}" + RESET)
             print(CIANO + f"Ajudas restantes: {ajudas_restantes}" + RESET)
 
@@ -272,27 +308,18 @@ def joga():
                 if pulos_restantes == 0:
                     print(AMARELO + "Você não tem mais pulos." + RESET)
                     continue
+
                 pulos_restantes -= 1
                 print(AMARELO + "Questão pulada." + RESET)
+                numero_questao += 1
                 break
 
             if opcao.upper() == questao["correta"]:
                 premio_atual = PONTOS[indice_premio]
                 indice_premio += 1
+
                 print(VERDE + "Resposta correta!" + RESET)
-                print(VERDE + f"Você agora tem R$ {premio_atual}." + RESET)
-
-                if indice_premio == len(PONTOS):
-                    print(NEGRITO + VERDE + f"\nParabéns, {nome}! Você ganhou o prêmio máximo!" + RESET)
-                    return
-
-                continuar = input("Deseja continuar? (s/n): ").strip().lower()
-                while continuar not in ["s", "n"]:
-                    continuar = input("Digite s ou n: ").strip().lower()
-
-                if continuar == "n":
-                    print(NEGRITO + CIANO + f"Você saiu com R$ {premio_atual}." + RESET)
-                    return
+                print(VERDE + f"Seu prêmio atual é de R$ {premio_atual:.2f}" + RESET)
 
                 numero_questao += 1
                 break
