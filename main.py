@@ -5,6 +5,7 @@ from funcoes import (
     questao_para_texto,
     gera_ajuda
 )
+import random
 
 VERMELHO = "\033[91m"
 VERDE = "\033[92m"
@@ -229,19 +230,18 @@ def joga():
     numero_questao = 1
 
     while True:
-        if indice_premio == len(PONTOS):
-            print(NEGRITO + VERDE + f"\nParabéns, {nome}! Você chegou a 1000000!" + RESET)
+        niveis_disponiveis = []
+
+        for nivel in base:
+            disponiveis = [q for q in base[nivel] if q not in questoes_sorteadas]
+            if len(disponiveis) > 0:
+                niveis_disponiveis.append(nivel)
+
+        if len(niveis_disponiveis) == 0:
+            print(AMARELO + "Não há mais questões disponíveis." + RESET)
             return
 
-        nivel = input("\nEscolha o nível (facil, medio ou dificil): ").strip().lower()
-        while nivel not in base:
-            print(VERMELHO + "Nível inválido." + RESET)
-            nivel = input("Escolha o nível (facil, medio ou dificil): ").strip().lower()
-
-        disponiveis = [q for q in base[nivel] if q not in questoes_sorteadas]
-        if not disponiveis:
-            print(AMARELO + "Não há mais questões inéditas nesse nível." + RESET)
-            continue
+        nivel = random.choice(niveis_disponiveis)
 
         questao = sorteia_questao_inedita(base, nivel, questoes_sorteadas)
         ajuda_usada_nesta_questao = False
