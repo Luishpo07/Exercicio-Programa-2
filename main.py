@@ -237,6 +237,16 @@ def joga():
         {'titulo': 'O que é Necrose?',
          'nivel': 'dificil',
          'opcoes': {'A': 'Uma banda de Rock', 'B': 'Uma marca de luxo', 'C': 'Cidade Francesa', 'D': 'Morte de tecido orgânico'},
+         'correta': 'D'},
+
+         {'titulo': 'Qual é o maior artilheiro do futebol no século 21?',
+         'nivel': 'medio',
+         'opcoes': {'A': 'Neymar', 'B': 'Cristiano Ronaldo', 'C': 'Lionel Messi', 'D': 'Pelé'},
+         'correta': 'B'},
+
+         {'titulo': 'Qual é o maior finalizador da história do UFC?',
+         'nivel': 'medio',
+         'opcoes': {'A': 'Islam Makhachev', 'B': 'Demetrious Johnson', 'C': 'Demian Maia', 'D': 'Charles Oliveira'},
          'correta': 'D'}
     ]
 
