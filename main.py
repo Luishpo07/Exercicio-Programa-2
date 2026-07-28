@@ -271,5 +271,17 @@ def joga():
                 return
 
 
+def menu_principal():
+    while True:
+        joga()
+
+        novamente = input("\nDeseja jogar novamente? (s/n): ").strip().lower()
+        while novamente not in ["s", "n"]:
+            novamente = input("Digite s ou n: ").strip().lower()
+
+        if novamente == "n":
+            print("Até mais!")
+            break
+
 if __name__ == "__main__":
-    joga()
+    menu_principal()
