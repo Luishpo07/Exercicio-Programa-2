@@ -23,7 +23,7 @@ def joga():
     print("\nBem-vindo ao Fortuna DesSoft!")
     print("Responda perguntas, use 3 pulos e 2 ajudas, e tente chegar ao prêmio máximo.\n")
 
-    quest = [{'titulo': 'Qual o resultado da operação 57 + 32?',
+    questoes = [{'titulo': 'Qual o resultado da operação 57 + 32?',
           'nivel': 'facil',
           'opcoes': {'A': '-19', 'B': '85', 'C': '89', 'D': '99'},
           'correta': 'C'},
